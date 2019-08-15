@@ -135,4 +135,47 @@ Humanoid.prototype.greet = function () {
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
-  
+  const heroOfAges = new Humanoid({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 2,
+    },
+    healthPoints: 13,
+    name: 'Darian Shallar',
+    team: 'Travelling Bards',
+    weapons: [
+      'Threaded Cane',
+      'Violin',
+      'Flintlock Pistol',
+    ],
+    language: [
+      'Elvish',
+  ],
+  });
+
+  const bbeg = new Humanoid({
+    createdAt: new Date(),
+    dimensions: {
+      length: 3,
+      width: 4,
+      height: 3,
+    },
+    healthPoints: 25,
+    name: 'Mavridoc Saw',
+    team: 'Phandelvan Council',
+    weapons: [
+      'Glaive',
+      'Fireball',
+      'Lightning Bolt',
+    ],
+    language: [
+      'Goblin',
+  ],
+  });
+
+  console.log (heroOfAges.name);
+  console.log (bbeg.name);
+  console.log (bbeg.weapons);
+  console.log (heroOfAges.greet());
