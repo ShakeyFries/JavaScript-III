@@ -135,24 +135,69 @@ Humanoid.prototype.greet = function () {
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
 
-  const heroOfAges = new Humanoid({
+  function Hero(heroAttrs) {
+    Humanoid.call(this, heroAttrs);
+    this.armorClass = heroAttrs.armorClass;
+    this.critical = heroAttrs.critical;
+  };
+  
+  Hero.prototype = Object.create(Humanoid.prototype);
+
+  Hero.prototype.attack = function() {
+    let attackDmg = 8;
+    let enemy = bbeg.name;
+    let enemyHealth = bbeg.healthPoints;
+    return () => {
+      enemyHealth = enemyHealth - attackDmg;
+      enemyHealth > 1
+        ? console.log(
+            `${this.name} ${this.critical}'s ${enemy} for ${attackDmg}. ${enemy} has ${enemyHealth} health points.`
+          )
+        : console.log(`${this.name} ${this.critical}'s ${enemy} and ${enemy} vanquishes`);
+    };
+  };
+
+  function Villain(villainAttrs) {
+    Humanoid.call(this, villainAttrs);
+    this.armorType = villainAttrs.armorType;
+    this.critical = villainAttrs.critical;
+  }
+  
+  Villain.prototype = Object.create(Humanoid.prototype);
+
+  Villain.prototype.attack = function() {
+    let attackDmg = 7;
+    let enemy = bard.name;
+    let enemyHealth = bard.healthPoints;
+    return () => {
+      enemyHealth = enemyHealth - attackDmg;
+      enemyHealth > 1
+        ? console.log(
+            `${this.name} ${this.critical}'s ${enemy} for ${attackDmg}. ${enemy} has ${enemyHealth} health points.`
+          )
+        : console.log(`${this.name} ${this.critical}'s ${enemy} and ${enemy} Perishes.`);
+    };
+  };
+
+
+  const bard = new Humanoid({
     createdAt: new Date(),
     dimensions: {
       length: 2,
       width: 2,
       height: 2,
     },
-    healthPoints: 13,
-    name: 'Darian Shallar',
+    healthPoints: 23,
+    name: 'Thrand Silverkin',
     team: 'Travelling Bards',
     weapons: [
       'Threaded Cane',
       'Violin',
       'Flintlock Pistol',
     ],
-    language: [
-      'Elvish',
-  ],
+    language: 'Elvish',
+    armorClass: 'Lyrical Armor',
+    critical: 'Vicious Mockery',
   });
 
   const bbeg = new Humanoid({
@@ -175,7 +220,20 @@ Humanoid.prototype.greet = function () {
   ],
   });
 
-  console.log (heroOfAges.name);
+  console.log (bard.name);
   console.log (bbeg.name);
   console.log (bbeg.weapons);
-  console.log (heroOfAges.greet());
+  console.log (bard.greet());
+ 
+
+
+
+//   debug() {
+//     curly.healthPoints = curly.healthPoints - 5;
+//     if (curly.healthPoints <= 0) {
+//       console.log(curly.takeDamage()); 
+//       console.log(`${this.name} uses ${this.weapons[0]}. ${curly.name} has been defeated! Long live Freedom!`)
+//       console.log(curly.destroy());
+//     } else {console.log(`${this.name} uses ${this.weapons[1]}. ${curly.takeDamage()} You lose 5 HP. You only have ${curly.healthPoints} HP left!`);
+//   }
+// }
