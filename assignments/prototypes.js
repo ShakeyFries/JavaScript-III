@@ -15,6 +15,14 @@
   * dimensions (These represent the character's size in the video game)
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
+function GameObject (attrs){
+  this.createdAt = attrs.createdAt;
+  this.name = attrs.name;
+  this.dimensions = attrs.dimensions;
+};
+GameObject.prototype.destroy = function (){
+  return `${this.name} was removed from the game.`;
+};
 
 /*
   === CharacterStats ===
@@ -22,7 +30,15 @@
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
+function CharacterStats (charAttrs){
+  GameObject.call (this, charAttrs)
+  this.healthPoints = charAttrs.healthPoints;
+}; 
+CharacterStats.prototype = Object.create(GameObject.prototype);
 
+CharacterStats.prototype.takeDamage = function () {
+  return `${this.name} took damage.`;
+};
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
   * team
@@ -32,7 +48,17 @@
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
- 
+function Humanoid (humAttrs){
+  CharacterStats.call (this, humAttrs)
+  this.team = humAttrs.team;
+  this.weapons = humAttrs.weapons;
+  this.language = humAttrs.language;
+};
+Humanoid.prototype = Object.create (CharacterStats.prototype);
+
+Humanoid.prototype.greet = function () {
+  return `${this.name} offers a greeting in ${this.language}`;
+}
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -41,7 +67,7 @@
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -102,9 +128,112 @@
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
   // * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
   // * Create two new objects, one a villain and one a hero and fight it out with methods!
+
+  function Hero(heroAttrs) {
+    Humanoid.call(this, heroAttrs);
+    this.armorClass = heroAttrs.armorClass;
+    this.critical = heroAttrs.critical;
+  };
+  
+  Hero.prototype = Object.create(Humanoid.prototype);
+
+  Hero.prototype.attack = function() {
+    let attackDmg = 8;
+    let enemy = bbeg.name;
+    let enemyHealth = bbeg.healthPoints;
+    return () => {
+      enemyHealth = enemyHealth - attackDmg;
+      enemyHealth > 1
+        ? console.log(
+            `${this.name} ${this.critical}'s ${enemy} for ${attackDmg}. ${enemy} has ${enemyHealth} health points.`
+          )
+        : console.log(`${this.name} ${this.critical}'s ${enemy} and ${enemy} vanquishes`);
+    };
+  };
+
+  function Villain(villainAttrs) {
+    Humanoid.call(this, villainAttrs);
+    this.armorType = villainAttrs.armorType;
+    this.critical = villainAttrs.critical;
+  }
+  
+  Villain.prototype = Object.create(Humanoid.prototype);
+
+  Villain.prototype.attack = function() {
+    let attackDmg = 7;
+    let enemy = bard.name;
+    let enemyHealth = bard.healthPoints;
+    return () => {
+      enemyHealth = enemyHealth - attackDmg;
+      enemyHealth > 1
+        ? console.log(
+            `${this.name} ${this.critical}'s ${enemy} for ${attackDmg}. ${enemy} has ${enemyHealth} health points.`
+          )
+        : console.log(`${this.name} ${this.critical}'s ${enemy} and ${enemy} Perishes.`);
+    };
+  };
+
+
+  const bard = new Humanoid({
+    createdAt: new Date(),
+    dimensions: {
+      length: 2,
+      width: 2,
+      height: 2,
+    },
+    healthPoints: 23,
+    name: 'Thrand Silverkin',
+    team: 'Travelling Bards',
+    weapons: [
+      'Threaded Cane',
+      'Violin',
+      'Flintlock Pistol',
+    ],
+    language: 'Elvish',
+    armorClass: 'Lyrical Armor',
+    critical: 'Vicious Mockery',
+  });
+
+  const bbeg = new Humanoid({
+    createdAt: new Date(),
+    dimensions: {
+      length: 3,
+      width: 4,
+      height: 3,
+    },
+    healthPoints: 25,
+    name: 'Mavridoc Saw',
+    team: 'Phandelvan Council',
+    weapons: [
+      'Glaive',
+      'Fireball',
+      'Lightning Bolt',
+    ],
+    language: [
+      'Goblin',
+  ],
+  });
+
+  console.log (bard.name);
+  console.log (bbeg.name);
+  console.log (bbeg.weapons);
+  console.log (bard.greet());
+ 
+
+
+
+//   debug() {
+//     curly.healthPoints = curly.healthPoints - 5;
+//     if (curly.healthPoints <= 0) {
+//       console.log(curly.takeDamage()); 
+//       console.log(`${this.name} uses ${this.weapons[0]}. ${curly.name} has been defeated! Long live Freedom!`)
+//       console.log(curly.destroy());
+//     } else {console.log(`${this.name} uses ${this.weapons[1]}. ${curly.takeDamage()} You lose 5 HP. You only have ${curly.healthPoints} HP left!`);
+//   }
+// }
